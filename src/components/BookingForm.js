@@ -1,212 +1,58 @@
 import React, { useState } from 'react';
 
+const BookingForm = (props) => {
 
-const BookingForm = () => {
+   const [occasion, setOccasion] = useState("");
+   const [guests, setGuests] = useState("");
+   const [date, setDate] = useState("");
+   const [times, setTimes] = useState("")
 
-  const [date, setDate] = useState(new Date())
-  const [selectedOption, setSelectedOption] = useState('Indoor Seating')
-  const [diners, setDiners] = useState(2)
-  const [ocassion, setOcassion] = useState('birthday')
-  const [time, setTime] = useState('')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [isTermsChecked, setIsTermsChecked] = useState(false)
-  const [textAreaValue, setTextAreaValue] = useState('')
+   const handleSumbit = (e) => {
+   e.preventDefault();
+   props.submitForm(e);
+   };
 
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (!date || !time || isTermsChecked === false) {
-      alert('Fill in all fields before submitting')
-      return;
-    }
-
-    const formData = {
-      Date: date,
-      Seating: selectedOption,
-      Diners: diners,
-      Ocassion: ocassion,
-      Time: time,
-      Name: name,
-      Email: email,
-      Phone: phone,
-      Terms: isTermsChecked,
-      Instructions: textAreaValue
-    }
-
-    submitFormData(formData);
-    console.log('form submitted');
-    setDate('')
-    setDiners(2)
-    setOcassion('birthday')
-    setTime('')
-    setName('')
-    setEmail('')
-    setPhone('')
-    setIsTermsChecked(false)
-    setTextAreaValue('')
-
-  }
-
-
-  const submitFormData = (data) => {
-
-    fetch('https://raw.githubusercontent.com/Meta-Front-End-Developer-PC/capstone/master/api.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('API Response:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  };
-
+   const handleChange = (e) => {
+    setDate(e);
+    props.dispatch(e);
+   }
 
   return (
-    <section className='section  background-primary'>
-      <section className='banner-recipes'>
-        <h2 className='form-heading'> Reservations</h2>
-        <form className='form form-layout' onSubmit={handleSubmit}>
-          <div className="seating form-row">
-            <div className="field">
-              <label className='form-label'>
-                <input
-                  type="radio"
-                  value="Indoor Seating"
-                  checked={selectedOption === 'Indoor Seating'}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                />
-                Indoor Seating
-              </label>
+    <header>
+      <section>
+        <form onSubmit={handleSumbit}>
+          <fieldset className="formField">
+            <div>
+              <label htmlFor="book-date">Choose Date:</label>
+              <input id="book-date" value={date} onChange={(e) => handleChange(e.target.value)} type="date" required/>
             </div>
-            <div className="field">
-              <label className='form-label'>
-                <input
-                  type="radio"
-                  value="Outoor Seating"
-                  checked={selectedOption === 'Outoor Seating'}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                />
-                Outdoor Seating
-              </label>
-            </div>
-          </div>
-          <div className="form-row seating">
-            <div className="field">
-              <label htmlFor="date" className="form-label">Date</label>
-              <input
-                type="date"
-                id="date"
-                className='custom-date-input'
-                placeholder={new Date()}
-                value={date}
-                onChange={(e) => setDate(e.target.value)} />
-            </div>
-            <div className="field">
-              <label htmlFor="diners" className="form-label">No of Diners</label>
-              <input
-                type="number"
-                id="diners"
-                min='2'
-                max='8'
-                placeholder='2'
-                className='custom-number-input'
-                value={diners}
-                onChange={(e) => setDiners(e.target.value)} />
-            </div>
-          </div>
-          <div className="form-row seating">
-            <div className="field">
-              <label htmlFor="ocassion" className="form-label">Ocassion</label>
-              <select
-                id="ocassion"
-                className='custom-select'
-                value={ocassion}
-                onChange={(e) => setOcassion(e.target.value)}>
-                <option value="birthday">Birthday</option>
-                <option value="anniversary">Anniversary</option>
-                <option value="casual">Casual</option>
-                <option value="meeting">Meeting</option>
-                <option value="date">Date</option>
+            <div>
+              <label htmlFor="book-time">Choose Time:</label>
+              <select id="book-time" value={times} onChange={(e) => setTimes(e.target.value)} required>
+                <option value="">Select a Time</option>
+               {props.availableTimes.availableTimes.map(availableTimes => {return <option key={availableTimes}>{availableTimes}</option>})}
               </select>
             </div>
-            <div className="field">
-              <label htmlFor="time" className="form-label">Select Time</label>
-              <input
-                type="time"
-                id="time"
-                className='custom-time-input'
-                value={time}
-                onChange={(e) => setTime(e.target.value)} />
+            <div>
+              <label htmlFor="book-guests">Number of Guests:</label>
+              <input id="book-guests" min="1" value={guests} onChange={(e) => {setGuests(e.target.value)}} type={"number"} placeholder={0} max={10} required></input>
             </div>
-          </div>
-          <div className="seating form-row">
-            <div className="field">
-              <label htmlFor="name" className='form-label'>Name*</label>
-              <input
-                type="text"
-                id="name"
-                className='form-input custom-input custom-width'
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)} />
+            <div>
+              <label htmlFor="book-occasion">Occasion:</label>
+              <select id="book-occasion" key={occasion} value={occasion} onChange={(e) => setOccasion(e.target.value)} required>
+                <option value="">Select an Option</option>
+                <option>Birthday</option>
+                <option>Anniversary</option>
+              </select>
             </div>
-            <div className="field">
-              <label htmlFor="email" className='form-label'>Email*</label>
-              <input
-                type="email"
-                id="email"
-                className='form-input custom-input custom-width'
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)} />
+            <div className="btnReceive">
+              <input aria-label="On Click" type={"submit"} value={"Make Your Reservation"}></input>
             </div>
-          </div>
-          <div className="seating form-row">
-            <div className="field">
-              <label htmlFor="phone" className='form-label'>Phone Number*</label>
-              <input
-                type="tel"
-                id="phone"
-                className='form-input custom-input custom-width'
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)} />
-            </div>
-            <div className="field">
-              <label htmlFor="tnc" className='form-label tnc'>Agree to the terms and conditions*
-                <input
-                  type="checkbox"
-                  id="tnc"
-                  className='form-input'
-                  checked={isTermsChecked}
-                  onChange={(e) => setIsTermsChecked(e.target.checked)} />
-              </label>
-            </div>
-          </div>
-          <div className="seating form-row">
-            <label htmlFor="instuctions" className='form-label'>Instructions</label>
-            <textarea
-              id="terms"
-              cols="95"
-              rows="10"
-              className='custom-textarea textarea'
-              value={textAreaValue}
-              onChange={(e) => setTextAreaValue(e.target.value)} />
-          </div>
-          <button type="submit" className='btn'>Confirm Reservation</button>
+          </fieldset>
         </form>
       </section>
-    </section>
-  )
-}
+    </header>
+  );
+};
 
 export default BookingForm;

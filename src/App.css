@@ -388,6 +388,10 @@ footer ul li{
   margin-bottom: 20px;
 }
 
+span{
+  color: white;
+}
+
 .form {
   width: 40%;
   height: auto;
