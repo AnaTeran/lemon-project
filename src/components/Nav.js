@@ -25,19 +25,19 @@ const Nav = () => {
                     <a href='/'>Home</a>
                 </li>
                 <li>
-                    <a href='/'>About</a>
+                    <a href='#'>About</a>
                 </li>
                 <li>
-                    <a href='./Menu'>Menu</a>
+                    <a href='#'>Menu</a>
                 </li>
                 <li>
-                    <a href='./BookingForm'>Reservations</a>
+                    <a href='./Booking'>Reservations</a>
                 </li>
                 <li>
-                    <a href='/'>Order</a>
+                    <a href='#'>Order</a>
                 </li>
                 <li>
-                    <a href='/'>Login</a>
+                    <a href='#'>Login</a>
                 </li>
             </ul>
         </nav>
